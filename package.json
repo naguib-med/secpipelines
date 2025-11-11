@@ -1,0 +1,25 @@
+{
+  "name": "secpipelines",
+  "version": "1.0.0",
+  "description": "Pipelines CI/CD sécurisée pour applications Node.js (SAST, DAST, SCA, etc.)",
+  "license": "ISC",
+  "author": "Naguib MOHAMED MAHAMOUD",
+  "type": "commonjs",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
