@@ -1,12 +1,32 @@
-FROM node:20-alpine AS builder
+# -----------------------------
+# 🏗️ Build stage
+# -----------------------------
+FROM node:25-slim AS builder
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci --omit=dev
+
+# Copier uniquement les manifests au début
 COPY . .
 
-FROM node:20-alpine
+# Supprimer le lockfile pour forcer npm à re-résoudre les deps corrigées
+RUN npm install -g npm@latest && rm -f package-lock.json && npm install --omit=dev
+
+# Copier le reste du code
+COPY . .
+
+# -----------------------------
+# 🚀 Production stage
+# -----------------------------
+FROM node:25-slim
 WORKDIR /app
+
+# Environnement sécurisé
 ENV NODE_ENV=production
+
+# Copier uniquement ce qui est nécessaire depuis le builder
 COPY --from=builder /app /app
+
+# Exposer le port
 EXPOSE 3000
-CMD [ "node", "src/app.js" ]
+
+# Démarrer l'application
+CMD ["node", "src/app.js"]
