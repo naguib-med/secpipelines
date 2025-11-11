@@ -41,6 +41,8 @@ jobs:
             - name: SCA Scan (Snyk test)
               run: snyk test --severity-threshold=high
 
+            - name: Build Docker image
+              run: docker build -t secpipelines:ci .
             - name: Trivy vulnerability scan
               uses: aquasecurity/trivy-action@0.28.0
               with:
