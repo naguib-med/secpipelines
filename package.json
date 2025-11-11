@@ -12,6 +12,8 @@
     "test": "jest --runInBand"
   },
   "dependencies": {
+    "brace-expansion": "^2.0.2",
+    "cross-spawn": "^7.0.5",
     "express": "^5.1.0"
   },
   "devDependencies": {
