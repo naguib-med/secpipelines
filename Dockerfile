@@ -1,7 +1,7 @@
 # -----------------------------
 # 🏗️ Build stage
 # -----------------------------
-FROM node:25-slim AS builder
+FROM node:25-alpine3.21 AS builder
 WORKDIR /app
 
 # Copier uniquement les manifests au début
@@ -16,7 +16,7 @@ COPY . .
 # -----------------------------
 # 🚀 Production stage
 # -----------------------------
-FROM node:25-slim
+FROM node:25-alpine3.21
 WORKDIR /app
 
 # Environnement sécurisé
