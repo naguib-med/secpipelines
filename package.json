@@ -14,7 +14,8 @@
   "dependencies": {
     "brace-expansion": "^2.0.2",
     "execa": "^9.6.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "jest-changed-files": "^30.2.0"
   },
   "devDependencies": {
     "jest": "^30.2.0",
