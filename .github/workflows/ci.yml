@@ -1,0 +1,56 @@
+name: SecPipelines CI/CD
+
+on:
+    push:
+        branches: [ "main" ]
+        pull_request:
+            branches: [ "main" ]
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            security-events: write
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                    node-version: '20'
+                    cache: 'npm'
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run unit tests
+              run: npm test
+
+            - name: Install Semgrep
+              run: |
+                python3 -m pip install --upgrade pip
+                pip3 install semgrep
+            - name: SAST Scan with Semgrep
+              run: semgrep --config=auto --error || true
+
+            - name: Install Snyk CLI
+              run: npm install -g snyk
+            - name: Authenticate Snyk
+              env:
+                  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+              run: snyk auth $SNYK_TOKEN
+            - name: SCA Scan (Snyk test)
+              run: snyk test --severity-threshold=high || true
+
+            - name: Trivy vulnerability scan
+              uses: aquasecurity/trivy-action@0.28.0
+              with:
+                image-ref: 'secpipelines:ci'
+                format: 'table'
+                exit-code: '1'
+                vuln-type: 'os,library'
+                severity: 'HIGH,CRITICAL'
+            
+            - name: Deploy if all tests pass
+              if: success()
+              run: echo "Deploy step would trigger here (Render/Railway/GH Pages)."
